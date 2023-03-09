@@ -11,7 +11,7 @@ df = pd.read_csv(FILEPATH / 'data/original.csv')
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
 # Read Image
-image = Image.open('pics/logo_transparent.png')
+image = Image.open(FILEPATH / 'pics/logo_transparent.png')
 
 
 # Create a histrical graph
@@ -53,23 +53,23 @@ def show_prophet():
 
     with col1:
         st.markdown(':violet[NBeats]')
-        st.image("pics/owl.jpeg")
+        st.image(FILEPATH / "pics/owl.jpeg")
 
     with col2:
         st.markdown(':green[Kalman]')
-        st.image("pics/monkey.jpeg")
+        st.image(FILEPATH / "pics/monkey.jpeg")
 
     with col3:
         st.markdown(':red[ARIMA]')
-        st.image("pics/download.jpeg")
+        st.image(FILEPATH / "pics/download.jpeg")
 
     with col4:
         st.markdown(':blue[Meta]')
-        st.image("pics/cat.jpeg")
+        st.image(FILEPATH / "pics/cat.jpeg")
 
     with col5:
         st.markdown(':orange[T.F.T.]')
-        st.image("pics/bear.jpeg")
+        st.image(FILEPATH / "pics/bear.jpeg")
 
     st.markdown("")
     st.markdown("")

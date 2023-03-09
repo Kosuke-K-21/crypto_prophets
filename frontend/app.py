@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.express as px
 import streamlit as st
 from PIL import Image
@@ -8,7 +9,12 @@ FILEPATH = Path(__file__).parents[0]
 
 # Read dataset
 df = pd.read_csv(FILEPATH / 'data/original.csv')
+df['date'] =  pd.to_datetime(df['date'], infer_datetime_format=True)
 df.drop('Unnamed: 0', axis=1, inplace=True)
+
+df_kf = pd.read_csv(FILEPATH / 'data/kalman.csv')
+df_kf['date'] =  pd.to_datetime(df_kf['date'], infer_datetime_format=True)
+df_kf.set_index('date', inplace=True)
 
 # Read Image
 image_logo = Image.open(FILEPATH / 'pics/logo_transparent.png')
@@ -39,6 +45,8 @@ def show_historical(ticker):
             ])
         )
     )
+
+    fig.update_traces(line_color='#f2f3f5')
 
     st.plotly_chart(fig)
 
@@ -88,22 +96,57 @@ def show_prediction(ticker):
     st.markdown("")
     st.subheader("Their predictions are...")
 
-    fig = px.line(df, x='date', y=ticker, title='Price:' + ticker)
+    val_length = 30
+    
+    df_cop = df.set_index('date')
 
-    fig.update_xaxes(
-        rangeslider_visible=True,
-        rangeselector=dict(
-            buttons=list([
-                dict(count=1, label="1m", step="month", stepmode="backward"),
-                dict(count=1, label="1m", step="month", stepmode="backward"),
-                dict(count=6, label="6m", step="month", stepmode="backward"),
-                dict(count=1, label="1y", step="year", stepmode="backward"),
-                dict(step="all")
-            ])
-        )
-    )
+    dummy_hist = pd.Series(index=df_cop.index[-val_length:])
+    dummy_pred = pd.Series(index=df_kf.index.to_series())
 
-    st.plotly_chart(fig)
+    plt.rcParams["font.family"] = "sans serif"
+
+    fig, ax = plt.subplots()
+
+    t = pd.concat([df_cop.index[-val_length:].to_series(), df_kf.index.to_series()])
+
+    y0 = pd.concat([df[ticker][-val_length:], dummy_pred])
+    y1 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + 100])
+    y2 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + 50])
+    y3 = pd.concat([dummy_hist, df_kf[ticker + '_0.5']])
+    y4 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + -50])
+    y5 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + -100])
+
+    c0,c1,c2,c3,c4,c5,  = "whitesmoke","red","skyblue","limegreen", "darkviolet", "darkorange"      # 各プロットの色
+    l0,l1,l2,l3,l4,l5 = "Histrical","ARIMA","Meta","Kalman", "Nbeats", "T.F.T"   # 各ラベル
+
+    ax.set_xlabel('Date')  # x軸ラベル
+    ax.set_ylabel(ticker + ' : Price ($)')  # y軸ラベル
+
+    ax.grid(color='#f2f3f5', alpha=0.3)       
+
+    fig.set_facecolor('#0E1117')
+    ax.set_facecolor('#0E1117')
+    
+    ax.spines['top'].set_color('#BEBEBE')
+    ax.spines['left'].set_color('#BEBEBE')
+    ax.spines['bottom'].set_color('#BEBEBE')
+    ax.spines['right'].set_color('#BEBEBE')
+    ax.xaxis.label.set_color('#f2f3f5')
+    ax.yaxis.label.set_color('#f2f3f5')
+    ax.tick_params(axis='x', colors='#f2f3f5')
+    ax.tick_params(axis='y', colors='#f2f3f5')
+
+    ax.plot(t, y0, color=c0, label=l0)
+    ax.plot(t, y1, color=c1, label=l1)
+    ax.plot(t, y2, color=c2, label=l2)
+    ax.plot(t, y3, color=c3, label=l3)
+    ax.plot(t, y4, color=c4, label=l4)
+    ax.plot(t, y5, color=c5, label=l5)
+
+    fig.autofmt_xdate(rotation=45)
+    ax.legend(loc=0)
+
+    st.pyplot(fig)
 
 
 # Area for each recommendation

@@ -53,23 +53,23 @@ def show_prophet():
 
     with col1:
         st.markdown(':violet[NBeats]')
-        st.image(FILEPATH / "pics/owl.jpeg")
+        st.image(FILEPATH / "pics/owl.png")
 
     with col2:
         st.markdown(':green[Kalman]')
-        st.image(FILEPATH / "pics/monkey.jpeg")
+        st.image(FILEPATH / "pics/monkey.png")
 
     with col3:
         st.markdown(':red[ARIMA]')
-        st.image(FILEPATH / "pics/download.jpeg")
+        st.image(FILEPATH / "pics/download.png")
 
     with col4:
         st.markdown(':blue[Meta]')
-        st.image(FILEPATH / "pics/cat.jpeg")
+        st.image(FILEPATH / "pics/cat.png")
 
     with col5:
         st.markdown(':orange[T.F.T.]')
-        st.image(FILEPATH / "pics/bear.jpeg")
+        st.image(FILEPATH / "pics/bear.png")
 
     st.markdown("")
     st.markdown("")

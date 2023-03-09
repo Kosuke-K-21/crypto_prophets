@@ -12,9 +12,26 @@ df = pd.read_csv(FILEPATH / 'data/original.csv')
 df['date'] =  pd.to_datetime(df['date'], infer_datetime_format=True)
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
+df_arima = pd.read_csv(FILEPATH / 'data/arima.csv')
+df_arima['date'] =  pd.to_datetime(df_arima['date'], infer_datetime_format=True)
+df_arima.set_index('date', inplace=True)
+
+df_prop = pd.read_csv(FILEPATH / 'data/prophet.csv')
+df_prop['date'] =  pd.to_datetime(df_prop['date'], infer_datetime_format=True)
+df_prop.set_index('date', inplace=True)
+
 df_kf = pd.read_csv(FILEPATH / 'data/kalman.csv')
 df_kf['date'] =  pd.to_datetime(df_kf['date'], infer_datetime_format=True)
 df_kf.set_index('date', inplace=True)
+
+df_nbeats = pd.read_csv(FILEPATH / 'data/nbeats.csv')
+df_nbeats['date'] =  pd.to_datetime(df_nbeats['date'], infer_datetime_format=True)
+df_nbeats.set_index('date', inplace=True)
+
+df_tft = pd.read_csv(FILEPATH / 'data/tft.csv')
+df_tft['date'] =  pd.to_datetime(df_tft['date'], infer_datetime_format=True)
+df_tft.set_index('date', inplace=True)
+
 
 # Read Image
 image_logo = Image.open(FILEPATH / 'pics/logo_transparent.png')
@@ -107,17 +124,17 @@ def show_prediction(ticker):
 
     fig, ax = plt.subplots()
 
-    t = pd.concat([df_cop.index[-val_length:].to_series(), df_kf.index.to_series()])
+    t = pd.concat([df_cop.index[-val_length:].to_series(), df_prop.index.to_series()])
 
     y0 = pd.concat([df[ticker][-val_length:], dummy_pred])
-    y1 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + 100])
-    y2 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + 50])
+    y1 = pd.concat([dummy_hist, df_arima[ticker + '_0.5']])
+    y2 = pd.concat([dummy_hist, df_prop[ticker + '_0.5']])
     y3 = pd.concat([dummy_hist, df_kf[ticker + '_0.5']])
-    y4 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + -50])
-    y5 = pd.concat([dummy_hist, df_kf[ticker + '_0.5'] + -100])
+    y4 = pd.concat([dummy_hist, df_nbeats[ticker + '_0.5']])
+    y5 = pd.concat([dummy_hist, df_tft[ticker + '_0.5']])
 
     c0,c1,c2,c3,c4,c5,  = "whitesmoke","red","skyblue","limegreen", "darkviolet", "darkorange"      # 各プロットの色
-    l0,l1,l2,l3,l4,l5 = "Histrical","ARIMA","Meta","Kalman", "Nbeats", "T.F.T"   # 各ラベル
+    l0,l1,l2,l3,l4,l5 = "Historical","ARIMA","Meta","Kalman", "Nbeats", "T.F.T"   # 各ラベル
 
     ax.set_xlabel('Date')  # x軸ラベル
     ax.set_ylabel(ticker + ' : Price ($)')  # y軸ラベル
@@ -150,11 +167,10 @@ def show_prediction(ticker):
 
 
 # Area for each recommendation
-def recommend(currency, model):
-
-    if 3 - 1 > 2:
+def recommend(ticker, df_pred):
+    if df_pred[ticker+'_0.5'][-1] / df[ticker][df.shape[0]-1] < 0.95:
         st.markdown(':red[Sell!]')
-    elif 3 - 1 < 2:
+    elif df_pred[ticker+'_0.5'][-1] / df[ticker][df.shape[0]-1] > 1.05:
         st.markdown(':green[Buy!]')
     else:
         st.markdown('Hold!')
@@ -171,23 +187,23 @@ def show_advice(ticker):
 
     with col1:
         st.markdown(':violet[NBeats]')
-        recommend(df[ticker], 1)
+        recommend(ticker, df_nbeats)
 
     with col2:
         st.markdown(':green[Kalman]')
-        recommend(df[ticker], 2)
+        recommend(ticker, df_kf)
 
     with col3:
         st.markdown(':red[ARIMA]')
-        recommend(df[ticker], 3)
+        recommend(ticker, df_arima)
 
     with col4:
         st.markdown(':blue[Meta]')
-        recommend(df[ticker], 4)
+        recommend(ticker, df_prop)
 
     with col5:
         st.markdown(':orange[T.F.T.]')
-        recommend(df[ticker], 5)
+        recommend(ticker, df_tft)
 
 
 # Create Space...

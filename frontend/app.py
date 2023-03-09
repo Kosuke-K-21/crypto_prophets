@@ -11,7 +11,12 @@ df = pd.read_csv(FILEPATH / 'data/original.csv')
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
 # Read Image
-image = Image.open(FILEPATH / 'pics/logo_transparent.png')
+image_logo = Image.open(FILEPATH / 'pics/logo_transparent.png')
+image_dog = Image.open(FILEPATH / 'pics/download.png')
+image_owl = Image.open(FILEPATH / 'pics/owl.png')
+image_cat = Image.open(FILEPATH / 'pics/cat.png')
+image_bear = Image.open(FILEPATH / 'pics/bear.png')
+image_monkey = Image.open(FILEPATH / 'pics/monkey.png')
 
 
 # Create a histrical graph
@@ -53,23 +58,23 @@ def show_prophet():
 
     with col1:
         st.markdown(':violet[NBeats]')
-        st.image(FILEPATH / "pics/owl.png")
+        st.image(image_owl)
 
     with col2:
         st.markdown(':green[Kalman]')
-        st.image(FILEPATH / "pics/monkey.png")
+        st.image(image_monkey)
 
     with col3:
         st.markdown(':red[ARIMA]')
-        st.image(FILEPATH / "pics/download.png")
+        st.image(image_dog)
 
     with col4:
         st.markdown(':blue[Meta]')
-        st.image(FILEPATH / "pics/cat.png")
+        st.image(image_cat)
 
     with col5:
         st.markdown(':orange[T.F.T.]')
-        st.image(FILEPATH / "pics/bear.png")
+        st.image(image_bear)
 
     st.markdown("")
     st.markdown("")
@@ -204,7 +209,7 @@ def explain_model():
 
 # Rendering
 def render():
-    st.image(image)
+    st.image(image_logo)
     st.header('Our five prophets predict the Future of Cryptocurrency...')
 
     create_space()

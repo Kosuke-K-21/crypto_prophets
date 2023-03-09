@@ -4,7 +4,7 @@ import streamlit as st
 from PIL import Image
 
 # Read dataset
-df = pd.read_csv('data/original.csv')
+df = pd.read_csv('original.csv')
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
 # Read Image

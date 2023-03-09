@@ -2,9 +2,12 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 from PIL import Image
+from pathlib import Path
+
+FILEPATH = Path(__file__).parents[1]
 
 # Read dataset
-df = pd.read_csv('original.csv')
+df = pd.read_csv(FILEPATH / 'data/original.csv')
 df.drop('Unnamed: 0', axis=1, inplace=True)
 
 # Read Image

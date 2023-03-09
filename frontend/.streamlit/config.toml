@@ -1,9 +1,4 @@
 [theme]
-
 base = 'dark'
-
 primaryColor ='purple'
-
-text = 'purple'
-
 font = 'monospace'

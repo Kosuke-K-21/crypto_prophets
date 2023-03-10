@@ -217,7 +217,9 @@ def create_space():
 
 # Explanation of Models...
 def explain_model():
-    st.markdown("How does each prophet predict prices?")
+    st.markdown("")
+    st.markdown("")
+    st.subheader("How does each prophet predict prices?")
     st.markdown("")
     st.markdown("")
 
@@ -274,6 +276,14 @@ def render():
     create_space()
 
     # Create tabs for cryptocurrencies
+    st.markdown("")
+    st.markdown("")
+    st.subheader("Please chooose a cryptocurrency you like.")
+    st.markdown("")
+    st.markdown("")
+    st.markdown("")
+    st.markdown("")
+
     tickers = df.columns[:-1]
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
@@ -329,7 +339,7 @@ def render():
 
     create_space()
     explain_model()
-
+    st.markdown("Predictions will be periodically updated...")
     create_space()
 
     # Disclaimer

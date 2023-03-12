@@ -339,6 +339,11 @@ def render():
 
     create_space()
     explain_model()
+    
+    st.markdown("")
+    st.markdown("")
+    st.markdown("")
+    st.markdown("")
     st.markdown("Predictions will be periodically updated...")
     create_space()
 
